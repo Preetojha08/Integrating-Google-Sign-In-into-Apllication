@@ -36,7 +36,6 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-
         logoutBtn=(Button)findViewById(R.id.logoutBtn);
         userName=(TextView)findViewById(R.id.name);
         userEmail=(TextView)findViewById(R.id.email);
@@ -51,6 +50,11 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                 .enableAutoManage(this,this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
                 .build();
+
+        if (googleApiClient.isConnected())
+        {
+            Toast.makeText(this, "Done Done", Toast.LENGTH_SHORT).show();
+        }
 
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override

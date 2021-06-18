@@ -4,9 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Toast;
 
@@ -23,54 +26,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     SignInButton signInButton;
     GoogleApiClient googleApiClient;
     private static final int RC_SIGN_IN = 1;
-
+    int counter=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(googleApiClient!= null && googleApiClient.isConnected())
-        {
-            startActivity(new Intent(MainActivity.this,ProfileActivity.class));
-            finish();
-            Toast.makeText(this, "hello", Toast.LENGTH_SHORT).show();
-        }
-
-         /*
-        //CHECKS IF APPLICATION IS OPEN FOR FIRST TIME
-        SharedPreferences sharedPreferences = getSharedPreferences("PREFERENCES",MODE_PRIVATE);
-        String FirstTime = sharedPreferences.getString("FirstTimeInstall","");
-
-
-        if (FirstTime.equals("Yes"))
-        {
-            //IF APP IS OPENED FOR FIRST TIME
-            startActivity(new Intent(OnBoardingActivity.this,MainActivity.class));
-        }
-        else
-        {
-            //CHANGE THE PREFERENCES
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("FirstTimeInstall","Yes");
-            editor.apply();
-        }
-
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-
-            // User is signed in.
-            // ...
-        } else {
-            // User is not signed in.
-            // Perform your operation.
-        }
-        */
-
-
         GoogleSignInOptions gso=new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
 
         googleApiClient=new GoogleApiClient.Builder(this).enableAutoManage(this,this).addApi(Auth.GOOGLE_SIGN_IN_API,gso)
                 .build();
+
 
         signInButton=(SignInButton)findViewById(R.id.google_sign_up_button);
 
@@ -78,10 +45,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             @Override
             public void onClick(View v) {
                 Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-                finish();
                 startActivityForResult(intent,RC_SIGN_IN);
+
             }
         });
+
     }
 
     @Override
@@ -96,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private void handleSignInResult(GoogleSignInResult result){
         if(result.isSuccess()){
             gotoProfile();
-            
         }else{
             Toast.makeText(getApplicationContext(),"Sign in cancel",Toast.LENGTH_LONG).show();
         }
@@ -104,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private void gotoProfile(){
         Intent intent=new Intent(MainActivity.this,ProfileActivity.class);
+        counter++;
         startActivity(intent);
     }
 
